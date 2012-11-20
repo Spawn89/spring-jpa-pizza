@@ -25,6 +25,9 @@ public class Pizza {
     @Column(name = "price")
     private Double price;
 
+    public Pizza() {
+    }
+
     public Pizza(Long id, String name, String description, Double price) {
         this.id = id;
         this.name = name;

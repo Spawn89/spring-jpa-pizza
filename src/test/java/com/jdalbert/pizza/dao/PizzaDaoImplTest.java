@@ -1,5 +1,6 @@
 package com.jdalbert.pizza.dao;
 
+import com.jdalbert.pizza.domain.Pizza;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,17 @@ import javax.sql.DataSource;
  * @author jdalbert
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-app-context-hsql.xml")
+@ContextConfiguration(locations = "classpath:test-app-context-mysql.xml")
 public class PizzaDaoImplTest {
 
-    private @Autowired
-    DataSource dataSource;
+    private @Autowired DataSource dataSource;
+    private @Autowired PizzaDao pizzaDao;
 
     @Test
     public void testFindByName() throws Exception {
+        Pizza p = pizzaDao.findByName("Pizza del Jefe");
 
+        assert( p != null && p.getDescription().equals("Delicioso !") );
     }
 
 }
