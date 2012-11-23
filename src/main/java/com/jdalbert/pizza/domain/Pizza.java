@@ -1,42 +1,38 @@
 package com.jdalbert.pizza.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 
 /**
  * @author jdalbert
  */
 @Entity
-@Table(name = "Pizza")
 public class Pizza {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
-    @Column(name = "name")
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "price")
+    @Column(nullable = false)
     private Double price;
 
     public Pizza() {
     }
 
-    public Pizza(Long id, String name, String description, Double price) {
-        this.id = id;
+    public Pizza(String name, Double price) {
         this.name = name;
-        this.description = description;
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
+    public Pizza(String name, Double price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
     }
 
     public void setId(Long id) {
@@ -66,4 +62,5 @@ public class Pizza {
     public void setPrice(Double price) {
         this.price = price;
     }
+
 }

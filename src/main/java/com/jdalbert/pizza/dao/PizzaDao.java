@@ -14,8 +14,6 @@ public interface PizzaDao {
 
     public List<Pizza> findAll() throws DataAccessException;
 
-    public Pizza findById(Long id) throws DataAccessException;
-
     public Pizza findByName(String pizzaName) throws DataAccessException;
 
     public void update(Pizza pizza) throws DataAccessException;

@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 /**
  * @author jdalbert
  */
@@ -21,9 +23,17 @@ public class PizzaDaoImplTest {
 
     @Test
     public void testFindByName() throws Exception {
-        Pizza p = pizzaDao.findByName("Pizza del Jefe");
+        // Given
+        Pizza pins = new Pizza("Pizza del Jefe", 10.0, "Delicioso !");
+        this.pizzaDao.create(pins);
 
-        assert( p != null && p.getDescription().equals("Delicioso !") );
+        // When
+        Pizza p = this.pizzaDao.findByName("Pizza del Jefe");
+
+        // Then
+        assertThat(p.getName()).isEqualTo("Pizza del Jefe");
+        assertThat(p.getPrice()).isEqualTo(10.0);
+        assertThat(p.getDescription()).isEqualTo("Delicioso !");
     }
 
 }

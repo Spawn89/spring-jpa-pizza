@@ -25,7 +25,15 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="MYSQL" />
+                <property name="showSql" value="true" />
+                <!-- Same as hibernate.hbm2ddl.auto = update -->
+                <!--<property name="generateDdl" value="true" />-->
             </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+            </props>
         </property>
     </bean>
 

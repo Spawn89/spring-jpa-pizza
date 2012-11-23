@@ -3,16 +3,19 @@ package com.jdalbert.pizza.dao;
 import com.jdalbert.pizza.domain.Pizza;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
  * @author jdalbert
  */
 @Repository
+@Transactional
 public class PizzaDaoImpl implements PizzaDao {
 
     @PersistenceContext
@@ -20,7 +23,7 @@ public class PizzaDaoImpl implements PizzaDao {
 
     @Override
     public void create(Pizza pizza) throws DataAccessException {
-        // TODO
+        em.persist(pizza);
     }
 
     @Override
@@ -29,14 +32,13 @@ public class PizzaDaoImpl implements PizzaDao {
     }
 
     @Override
-    public Pizza findById(Long id) throws DataAccessException {
-        return null;    // TODO
-    }
+    public Pizza findByName(String name) throws DataAccessException {
+        TypedQuery<Pizza> q = em.createQuery("from Pizza p where p.name = :name", Pizza.class);
+        q.setParameter("name", name);
 
-    @Override
-    public Pizza findByName(String pizzaName) throws DataAccessException {
-        Query query = em.createQuery("from Pizza p where p.name='" + pizzaName + "'");
-        return (Pizza) query.getSingleResult();
+        List<Pizza> pizzas = q.getResultList();
+
+        return pizzas.isEmpty() ? null : pizzas.get(0);
     }
 
     @Override
