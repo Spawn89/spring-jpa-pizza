@@ -48,7 +48,6 @@ public class PizzaDaoImplTest {
 
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(dataSource), operation);
 
-//        dbSetup.launch();
         this.dbSetupTracker.launchIfNecessary(dbSetup);
     }
 
