@@ -24,4 +24,31 @@ public class PizzaOrder {
     @ManyToMany
     private Collection<Pizza> pizzas;
 
+    public Long getId() {
+        return id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Collection<Pizza> getPizzas() {
+        return pizzas;
+    }
+
+    public void setPizzas(Collection<Pizza> pizzas) {
+        this.pizzas = pizzas;
+    }
 }
