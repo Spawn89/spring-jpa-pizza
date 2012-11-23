@@ -1,12 +1,23 @@
 package com.jdalbert.pizza.dao;
 
+import com.jdalbert.pizza.CommonOperations;
 import com.jdalbert.pizza.domain.Pizza;
+import com.ninja_squad.dbsetup.DbSetup;
+import com.ninja_squad.dbsetup.destination.DataSourceDestination;
+import com.ninja_squad.dbsetup.operation.Operation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
+
+import java.util.List;
+
+import static com.ninja_squad.dbsetup.Operations.insertInto;
+import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -16,21 +27,46 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(locations = "classpath:test-app-context-hsql.xml")
 public class PizzaDaoImplTest {
 
+    private @Autowired DataSource dataSource;
     private @Autowired PizzaDao pizzaDao;
+
+    @Before
+    public void prepare() throws Exception {
+        Operation operation =
+                sequenceOf(
+                        CommonOperations.DELETE_ALL,
+                        insertInto("pizza")
+                                .columns("id", "name", "description", "price")
+                                .values(1L, "Pizza Ultima", "Ma que buena !!!", 13)
+                                .values(2L, "Pizza del Jefe", "Delicioso !", 12)
+                                .values(3L, "Pizza pomme de terre", null, 12)
+                                .values(4L, "Pizza Regina", null, 10)
+                                .build());
+
+        DbSetup dbSetup = new DbSetup(new DataSourceDestination(dataSource), operation);
+        dbSetup.launch();
+    }
 
     @Test
     public void testFindByName() throws Exception {
         // Given
-        Pizza pizzaCreate = new Pizza("Pizza del Jefe", 10.0, "Delicioso !");
-        this.pizzaDao.create(pizzaCreate);
 
         // When
-        Pizza pizzaFound = this.pizzaDao.findByName("Pizza del Jefe");
+        Pizza pizza = this.pizzaDao.findByName("Pizza pomme de terre");
 
         // Then
-        assertThat(pizzaFound.getName()).isEqualTo("Pizza del Jefe");
-        assertThat(pizzaFound.getPrice()).isEqualTo(10.0);
-        assertThat(pizzaFound.getDescription()).isEqualTo("Delicioso !");
+        assertThat(pizza.getPrice()).isEqualTo(12);
+    }
+
+    @Test
+    public void testFindAll() {
+        // Given
+
+        // When
+        List<Pizza> pizzas = this.pizzaDao.findAll();
+
+        // Then
+        assertThat(pizzas).hasSize(4);
     }
 
 }
