@@ -1,7 +1,7 @@
 Spring-jpa-pizza
 ================
 
-Very simple project using :
+Simple project using :
 
 - [DbSetup](http://dbsetup.ninja-squad.com/)
 - Spring 3.1
