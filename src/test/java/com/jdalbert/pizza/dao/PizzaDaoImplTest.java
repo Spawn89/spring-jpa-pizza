@@ -3,6 +3,7 @@ package com.jdalbert.pizza.dao;
 import com.jdalbert.pizza.CommonOperations;
 import com.jdalbert.pizza.domain.Pizza;
 import com.ninja_squad.dbsetup.DbSetup;
+import com.ninja_squad.dbsetup.DbSetupTracker;
 import com.ninja_squad.dbsetup.destination.DataSourceDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 import org.junit.Before;
@@ -30,6 +31,8 @@ public class PizzaDaoImplTest {
     private @Autowired DataSource dataSource;
     private @Autowired PizzaDao pizzaDao;
 
+    private static DbSetupTracker dbSetupTracker = new DbSetupTracker();
+
     @Before
     public void prepare() throws Exception {
         Operation operation =
@@ -44,12 +47,15 @@ public class PizzaDaoImplTest {
                                 .build());
 
         DbSetup dbSetup = new DbSetup(new DataSourceDestination(dataSource), operation);
-        dbSetup.launch();
+
+//        dbSetup.launch();
+        this.dbSetupTracker.launchIfNecessary(dbSetup);
     }
 
     @Test
     public void testFindByName() throws Exception {
         // Given
+        this.dbSetupTracker.skipNextLaunch();
 
         // When
         Pizza pizza = this.pizzaDao.findByName("Pizza pomme de terre");
@@ -59,8 +65,20 @@ public class PizzaDaoImplTest {
     }
 
     @Test
+    public void testDelete() throws Exception {
+        // Given
+
+        // When
+        this.pizzaDao.delete(1L);
+
+        // Then
+        assertThat(this.pizzaDao.findById(1L)).isNull();
+    }
+
+    @Test
     public void testFindAll() {
         // Given
+        this.dbSetupTracker.skipNextLaunch();
 
         // When
         List<Pizza> pizzas = this.pizzaDao.findAll();
